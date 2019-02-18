@@ -36,5 +36,14 @@ engines:
       is_secure: 1
       is_http_only: 1
 
+plugins:
+  Auth::Extensible:
+    realms:
+      users:
+        provider: Demo
+        users:
+           - user: marco
+             pass: zzecret
+
 behind_proxy: 1
 
