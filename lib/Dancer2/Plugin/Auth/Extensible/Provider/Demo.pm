@@ -21,7 +21,23 @@ around authenticate_user => sub {
     }
 };
 
+# these needs to be provided
 
+sub authen_oath_validation_date {
+    my ($self, $username) = @_;
+}
+
+sub authen_oath_secret {
+    my ($self, $username) = @_;
+}
+
+sub set_authen_oath_validation_date {
+    my ($self, $username, $value) = @_;
+}
+
+sub set_authen_oath_secret {
+    my ($self, $username, $value) = @_;
+}
 
 1;
 

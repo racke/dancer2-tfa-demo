@@ -4,19 +4,12 @@ use strict;
 use warnings;
 use Data::Dumper;
 use Moo::Role;
-use Class::Method::Modifiers;
+requires qw/authen_oath_validation_date
+            authen_oath_secret
+            set_authen_oath_validation_date
+            set_authen_oath_secret
+            /;
 
-# this doesn't work mixing extends and with
-# requires qw/plugin/;
-# use Data::Dumper;
-#
-# around authenticate_user => sub {
-#     my $orig = shift;
-#     my $self = shift;
-#     my $ret = $orig->($self, @_);
-#     $self->plugin->app->logger->info("Here!");
-#     return $ret;
-# };
 
 sub check_tfa {
     my $self = shift;
