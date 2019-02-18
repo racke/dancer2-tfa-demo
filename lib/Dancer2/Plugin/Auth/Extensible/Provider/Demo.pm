@@ -21,23 +21,49 @@ around authenticate_user => sub {
     }
 };
 
-# these needs to be provided
+# these methods need to be provided
 
 sub authen_oath_validation_date {
     my ($self, $username) = @_;
+    if (my $details = $self->get_user_details($username)) {
+        $self->plugin->app->log(debug => Dumper($details));
+        return $details->{authen_oath_validation_date};
+    }
+    else {
+        return;
+    }
 }
 
 sub authen_oath_secret {
     my ($self, $username) = @_;
+    if (my $details = $self->get_user_details($username)) {
+        $self->plugin->app->log(debug => Dumper($details));
+        return $details->{authen_oath_secret};
+    }
+    else {
+        return;
+    }
 }
+
+# stuff it in memory. It should work.
 
 sub set_authen_oath_validation_date {
     my ($self, $username, $value) = @_;
+    if (my $details = $self->get_user_details($username)) {
+        $self->plugin->app->log(debug => Dumper($details));
+        $details->{authen_oath_validation_date} = $value;
+    }
 }
 
 sub set_authen_oath_secret {
     my ($self, $username, $value) = @_;
+    if (my $details = $self->get_user_details($username)) {
+        $self->plugin->app->log(debug => Dumper($details));
+        $details->{authen_oath_secret} = $value;
+    }
 }
+
+
 
 1;
 

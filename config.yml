@@ -41,6 +41,7 @@ plugins:
     realms:
       users:
         provider: Demo
+        username_key_name: user
         users:
            - user: marco
              pass: zzecret
