@@ -6,6 +6,10 @@ requires "CGI::Deurl::XS"   => "0";
 requires "HTTP::Parser::XS" => "0";
 requires "Dancer2::Template::TemplateFlute" => "0";
 requires "Dancer2::Plugin::Auth::Extensible" => "0.706";
+requires "Convert::Base32";
+requires "Imager::QRCode";
+requires "URI::Escape";
+requires "Data::SimplePassword";
 
 on "test" => sub {
     requires "Test::More"            => "0";

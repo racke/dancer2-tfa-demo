@@ -10,10 +10,11 @@ with qw/Dancer2::Plugin::Auth::Extensible::Role::TFA/;
 extends qw/Dancer2::Plugin::Auth::Extensible::Provider::Config/;
 
 around authenticate_user => sub {
-    my ($orig, $self, @args) = @_;
-    $self->plugin->app->log(debug => Dumper(\@args));
-    my $ret = $orig->($self, @args);
-    if ($self->check_tfa) {
+    my ($orig, $self, $username, $password, @args) = @_;
+    my $ret = $orig->($self, $username, $password, @args);
+    return unless $ret;
+    if ($self->check_tfa($username,
+                         $self->plugin->app->request->param('token'))) {
         return $ret;
     }
     else {
