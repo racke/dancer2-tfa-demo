@@ -5,11 +5,20 @@ use Dancer2::Plugin::Auth::Extensible;
 our $VERSION = '0.1';
 
 get '/' => sub {
-    template 'index' => { 'title' => 'TFAdemo' };
+    my $user = logged_in_user;
+    template index => {
+                       title => 'TFAdemo',
+                       user => $user->{user},
+                      };
 };
 
 get '/private' => require_login sub {
-    return "Very secret!"
+    my $user = logged_in_user;
+    template index => {
+                       title => "Reserved",
+                       user => $user->{user},
+                       message => "This is the secret part",
+                      };
 };
 
 true;

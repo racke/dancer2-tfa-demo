@@ -1,2 +1,7 @@
 <specification>
+  <value name="title" />
+  <value name="message" />
+  <value name="user" />
+  <container name="logged_in" value="user" />
+  <container name="not_logged_in" value="!user" />
 </specification>
