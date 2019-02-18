@@ -28,10 +28,19 @@ sub check_tfa {
 
 sub BUILD {
     my $self = shift;
-    my $app = $self->plugin->app;
+    my $plugin = $self->plugin;
+    print "BUILDING TFA\n";
+    my $app = $plugin->app;
     $app->add_route(method => 'get',
                     regexp => '/tfa',
-                    code => sub { $app->log(debug => Dumper($app->request)); return 'OK' });
+                    code => sub { get_tfa($app, $plugin) });
+}
+
+sub get_tfa {
+    my ($app, $plugin) = @_;
+    my $user = $plugin->logged_in_user;
+    $app->log(debug => "in get_tfa " . Dumper([ $plugin->logged_in_user ]));
+    return 'OK';
 }
 
 
