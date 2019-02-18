@@ -32,16 +32,43 @@ sub BUILD {
     print "BUILDING TFA\n";
     my $app = $plugin->app;
     $app->add_route(method => 'get',
-                    regexp => '/tfa',
-                    code => sub { get_tfa($app, $plugin) });
+                    regexp => '/tfa/setup',
+                    code => sub { tfa_setup($app, $plugin) });
+    $app->add_route(method => 'post',
+                    regexp => '/tfa/setup',
+                    code => sub { tfa_do_setup($app, $plugin) });
+    $app->add_route(method => 'get',
+                    regexp => '/tfa/qrcode.png',
+                    code => sub { tfa_qrcode($app, $plugin) });
+    $app->add_route(method => 'get',
+                    regexp => '/tfa/validate',
+                    code => sub { tfa_validate($app, $plugin) });
+    $app->add_route(method => 'post',
+                    regexp => '/tfa/check-user',
+                    code => sub { tfa_check_user($app, $plugin) });
 }
 
-sub get_tfa {
+sub tfa_setup {
     my ($app, $plugin) = @_;
     my $user = $plugin->logged_in_user;
     $app->log(debug => "in get_tfa " . Dumper([ $plugin->logged_in_user ]));
     return 'OK';
 }
 
+sub tfa_do_setup {
+    my ($app, $plugin) = @_;
+}
+
+sub tfa_qrcode {
+    my ($app, $plugin) = @_;
+}
+
+sub tfa_validate {
+    my ($app, $plugin) = @_;
+}
+
+sub tfa_check_user {
+    my ($app, $plugin) = @_;
+}
 
 1;
