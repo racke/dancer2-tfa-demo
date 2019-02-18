@@ -10,6 +10,8 @@ requires "Convert::Base32";
 requires "Imager::QRCode";
 requires "URI::Escape";
 requires "Data::SimplePassword";
+requires "Authen::OATH";
+requires "DateTime";
 
 on "test" => sub {
     requires "Test::More"            => "0";

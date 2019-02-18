@@ -1,0 +1,8 @@
+<specification>
+  <container name="cancelled" value="cancelled"/>
+  <container name="setup_ok" value="setup_ok"/>
+  <container name="wrong_token" value="wrong_token"/>
+  <container name="missing_validation" value="missing_validation">
+    <value name="qrcode" target="src" /> 
+  </container>
+</specification>

@@ -51,8 +51,7 @@ sub authen_oath_secret {
 sub set_authen_oath_validation_date {
     my ($self, $username, $value) = @_;
     if (my $details = $self->get_user_details($username)) {
-        $self->plugin->app->log(debug => Dumper($details));
-        $details->{authen_oath_validation_date} = $value;
+        $details->{authen_oath_validation_date} = $value ? "$value" : undef;
     }
 }
 

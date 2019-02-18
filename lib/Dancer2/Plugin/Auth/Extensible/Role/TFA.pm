@@ -5,9 +5,11 @@ use warnings;
 use Data::Dumper;
 use Moo::Role;
 use Convert::Base32 qw/encode_base32/;
+use Authen::OATH;
 use Imager::QRCode;
 use URI::Escape qw/uri_escape/;
 use Data::SimplePassword;
+use DateTime;
 
 requires qw/authen_oath_validation_date
             authen_oath_secret
@@ -21,8 +23,24 @@ has username_key_name => (is => 'ro',
 has qr_code_label => (is => 'ro',
                       default => sub { 'Demo' });
 
+has tfa_setup_view => (is => 'ro',
+                       default => sub { 'tfa_setup' });
+
 sub check_tfa {
     my ($self, $username, $token) = @_;
+    return 0 unless $username;
+    if ($self->authen_oath_secret($username) &&
+        $self->authen_oath_validation_date($username)) {
+        return $self->_do_check_tfa($username, $token);
+    }
+    else {
+        return 1;
+    }
+}
+
+sub _do_check_tfa {
+    my ($self, $username, $token) = @_;
+    return 0 unless $username;
     my $app = $self->plugin->app;
     my $secret = $self->authen_oath_secret($username);
     $app->log(debug => "User has secret $secret");
@@ -59,9 +77,6 @@ sub BUILD {
     $app->add_route(method => 'get',
                     regexp => '/tfa/qrcode.png',
                     code => sub { $self->tfa_qrcode });
-    $app->add_route(method => 'get',
-                    regexp => '/tfa/validate',
-                    code => sub { $self->tfa_validate });
     $app->add_route(method => 'post',
                     regexp => '/tfa/check-user',
                     code => sub { $self->tfa_check_user });
@@ -69,23 +84,72 @@ sub BUILD {
 
 sub tfa_setup {
     my ($self) = @_;
+    my $app = $self->plugin->app;
     if (my $username = $self->_username_logged_in) {
-        if ($self->authen_oath_secret($username) &&
-            $self->authen_oath_validation_date($username)) {
-            return "Already setup";
+        my %tokens;
+        if ($self->authen_oath_secret($username)) {
+            if ($self->authen_oath_validation_date($username)) {
+                %tokens = (setup_ok => 1);
+            }
+            else {
+                %tokens = (
+                           missing_validation => 1,
+                           qrcode => $app->request->uri_for('/tfa/qrcode.png'),
+                          );
+            }
         }
         else {
             $self->set_authen_oath_secret($username, Data::SimplePassword->new->make_password(30));
-            return q{<img src="/tfa/qrcode.png">};
+            %tokens = (
+                       missing_validation => 1,
+                       qrcode => $app->request->uri_for('/tfa/qrcode.png'),
+                      );
         }
+        return $app->template($self->tfa_setup_view, \%tokens);
     }
     else {
-        return $self->plugin->app->redirect('/');
+        return $app->redirect($app->request->uri_for('/'));
     }
 }
 
 sub tfa_do_setup {
     my ($self) = @_;
+    my $app = $self->plugin->app;
+    # here we have only a post. Cancel or confirm. Anything else, redirect.
+    if (my $username = $self->_username_logged_in) {
+        my %tokens;
+        if (my $secret = $self->authen_oath_secret($username)) {
+            $app->log(debug => "$username has secret $secret");
+            if ($self->authen_oath_validation_date($username)) {
+                $app->log(debug => "$username has active token");
+                if ($app->request->param('cancel')) {
+                    $self->set_authen_oath_secret($username, undef);
+                    $self->set_authen_oath_validation_date($username, undef);
+                    %tokens = (cancelled => 1);
+                }
+            }
+            elsif (my $token = $app->request->param('token')) {
+                if ($self->_do_check_tfa($username, $token)) {
+                    $self->set_authen_oath_validation_date($username, DateTime->now);
+                    %tokens = (setup_ok => 1);
+                }
+                else {
+                    %tokens = (
+                               wrong_token => 1,
+                               missing_validation => 1,
+                               qrcode => $app->request->uri_for('/tfa/qrcode.png'),
+                              );
+                }
+            }
+        }
+        if (%tokens) {
+            return $app->template($self->tfa_setup_view, \%tokens);
+        }
+        else {
+            return $app->redirect($app->request->uri_for('/tfa/setup'));
+        }
+    }
+    return $app->redirect($app->request->uri_for('/'));
 }
 
 sub tfa_qrcode {
@@ -110,12 +174,8 @@ sub tfa_qrcode {
     }
 }
 
-sub tfa_validate {
-    my ($self, $app, $plugin) = @_;
-}
-
 sub tfa_check_user {
-    my ($self, $app, $plugin) = @_;
+    my ($self) = @_;
 }
 
 sub _username_logged_in {
@@ -125,6 +185,5 @@ sub _username_logged_in {
         return $res->{$k};
     }
 }
-
 
 1;

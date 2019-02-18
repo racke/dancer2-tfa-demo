@@ -1,0 +1,32 @@
+<div style="text-align: center">
+  <div id="header">
+    <h1>2FA setup</h1>
+  </div>
+
+  <div class="wrong_token">
+    Incorrect token
+  </div>
+  <div class="cancelled">
+    2FA was cancelled.
+  </div>
+  <div class="setup_ok">
+    2FA is correctly setup.
+    <div class="cancel_form">
+      <form action="/tfa/setup" method="POST">
+        <input type="hidden" name="cancel" value="1" />
+        <button type="submit">Cancel</button>
+      </form>
+    </div>
+  </div>
+  <div class="missing_validation">
+    <form action="/tfa/setup" method="POST">
+      <img class="qrcode" src="/tfa/qrcode.png">
+      <div>
+        <input type="text" name="token" />
+      </div>
+      <div>
+        <button type="submit">Confirm</button>
+      </div>
+    </form>
+  </div>
+</div>
