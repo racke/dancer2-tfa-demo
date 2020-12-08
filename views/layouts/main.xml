@@ -1,3 +1,6 @@
 <specification>
-<value name="content" id="content" op="hook"/>
+  <container name="login" value="!session.logged_in_user"/>
+  <container name="logout" value="session.logged_in_user"/>
+
+  <value name="content" id="content" op="hook"/>
 </specification>
