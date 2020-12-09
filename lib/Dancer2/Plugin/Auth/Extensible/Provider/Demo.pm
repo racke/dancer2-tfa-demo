@@ -27,7 +27,7 @@ around authenticate_user => sub {
 sub authen_oath_validation_date {
     my ($self, $username) = @_;
     if (my $details = $self->get_user_details($username)) {
-        $self->plugin->app->log(debug => Dumper($details));
+        $self->plugin->app->log(debug => 'User details in authen_oath_validation_date: ' . Dumper($details));
         return $details->{authen_oath_validation_date};
     }
     else {
@@ -38,7 +38,7 @@ sub authen_oath_validation_date {
 sub authen_oath_secret {
     my ($self, $username) = @_;
     if (my $details = $self->get_user_details($username)) {
-        $self->plugin->app->log(debug => Dumper($details));
+        $self->plugin->app->log(debug => 'User details in authen_oath_secret: ' . Dumper($details));
         return $details->{authen_oath_secret};
     }
     else {
@@ -58,7 +58,7 @@ sub set_authen_oath_validation_date {
 sub set_authen_oath_secret {
     my ($self, $username, $value) = @_;
     if (my $details = $self->get_user_details($username)) {
-        $self->plugin->app->log(debug => Dumper($details));
+        $self->plugin->app->log(debug => 'User details in set_authen_oath_secret: ' . Dumper($details));
         $details->{authen_oath_secret} = $value;
     }
 }
