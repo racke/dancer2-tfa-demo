@@ -58,7 +58,7 @@ sub _do_check_tfa {
         }
     }
     else {
-        $app->log(debug => "Nothing to check, failing" . Dumper([ $username, $token ]));
+        $app->log(info => "Missing token for $username");
     }
     return 0;
 }
