@@ -46,7 +46,7 @@ sub _do_check_tfa {
     $app->log(debug => "User has secret $secret");
     # no secret stored, do nothing
     return 1 unless $secret;
-    if ($token && $username) {
+    if ($token) {
         $app->log(debug => "Checking TFA");
         my $expected = Authen::OATH->new->totp($secret);
         if ($token eq $expected) {
