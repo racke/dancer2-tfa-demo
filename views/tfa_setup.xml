@@ -5,4 +5,5 @@
   <container name="missing_validation" value="missing_validation">
     <value name="qrcode" target="src" /> 
   </container>
+  <value name="validation_date" class="validation-date"/>
 </specification>

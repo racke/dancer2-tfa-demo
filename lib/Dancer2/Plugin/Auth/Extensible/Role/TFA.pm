@@ -88,8 +88,11 @@ sub tfa_setup {
     if (my $username = $self->_username_logged_in) {
         my %tokens;
         if ($self->authen_oath_secret($username)) {
-            if ($self->authen_oath_validation_date($username)) {
-                %tokens = (setup_ok => 1);
+            if (my $validation_date = $self->authen_oath_validation_date($username)) {
+                %tokens = (
+                    setup_ok => 1,
+                    validation_date => $validation_date,
+                );
             }
             else {
                 %tokens = (
