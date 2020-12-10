@@ -7,7 +7,7 @@ our $VERSION = '0.1';
 get '/' => sub {
     my $user = logged_in_user;
     template index => {
-                       title => 'TFAdemo',
+                       title => config->{'title'},
                        user => $user->{user},
                       };
 };
@@ -15,7 +15,7 @@ get '/' => sub {
 get '/private' => require_login sub {
     my $user = logged_in_user;
     template index => {
-                       title => "Reserved",
+                       title => config->{'title'},
                        user => $user->{user},
                        message => "This is the secret part",
                       };

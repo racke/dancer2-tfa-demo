@@ -2,5 +2,6 @@
   <container name="login" value="!session.logged_in_user"/>
   <container name="logout" value="session.logged_in_user"/>
 
+  <value name="title" id="title" field="config.title"/>
   <value name="content" id="content" op="hook"/>
 </specification>

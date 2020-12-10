@@ -48,3 +48,4 @@ plugins:
 
 behind_proxy: 1
 
+title: "Two-Factor Authentication Demo"
