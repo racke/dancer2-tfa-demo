@@ -66,7 +66,7 @@ sub _do_check_tfa {
 sub BUILD {
     my $self = shift;
     my $plugin = $self->plugin;
-    print "BUILDING TFA\n";
+
     my $app = $plugin->app;
     $app->add_route(method => 'get',
                     regexp => '/tfa/setup',
