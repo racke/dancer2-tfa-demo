@@ -43,8 +43,8 @@ plugins:
         provider: Demo
         username_key_name: user
         users:
-           - user: marco
-             pass: zzecret
+           - user: dancer2
+             pass: 2fanow
 
 behind_proxy: 1
 
