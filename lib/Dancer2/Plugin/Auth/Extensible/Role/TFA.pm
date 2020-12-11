@@ -77,9 +77,6 @@ sub BUILD {
     $app->add_route(method => 'get',
                     regexp => '/tfa/qrcode.png',
                     code => sub { $self->tfa_qrcode });
-    $app->add_route(method => 'post',
-                    regexp => '/tfa/check-user',
-                    code => sub { $self->tfa_check_user });
 }
 
 sub tfa_setup {
@@ -175,10 +172,6 @@ sub tfa_qrcode {
             }
         }
     }
-}
-
-sub tfa_check_user {
-    my ($self) = @_;
 }
 
 sub _username_logged_in {
