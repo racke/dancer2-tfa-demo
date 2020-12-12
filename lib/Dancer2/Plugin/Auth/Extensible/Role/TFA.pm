@@ -131,7 +131,10 @@ sub tfa_do_setup {
             elsif (my $token = $app->request->param('token')) {
                 if ($self->_do_check_tfa($username, $token)) {
                     $self->set_authen_oath_validation_date($username, DateTime->now);
-                    %tokens = (setup_ok => 1);
+                    %tokens = (
+                        setup_ok => 1,
+                        validation_date => $self->authen_oath_validation_date($username),
+                    );
                 }
                 else {
                     %tokens = (
